@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class ProjectService implements BaseService<ProjectDTO> {
@@ -19,14 +20,17 @@ public class ProjectService implements BaseService<ProjectDTO> {
     private UserRepo userRepo;
 
     public void save(ProjectDTO projectDTO) {
+        System.out.println("save");
         Project entity = new Project();
         entity.setName(projectDTO.getName());
         entity.setDescription(projectDTO.getDescription());
-
+        System.out.println(projectDTO.getUserId());
         User owner = userRepo.findById(projectDTO.getUserId()).orElse(null);
+
         if (owner != null) {
             entity.setOwner(owner);
             projectRepo.save(entity);
+            System.out.println("not null");
         }
     }
 
@@ -45,7 +49,9 @@ public class ProjectService implements BaseService<ProjectDTO> {
         if (entity == null) {
             return null;
         }
-        ProjectDTO projectDTO = new ProjectDTO(entity.getName(),
+        ProjectDTO projectDTO = new ProjectDTO(
+                entity.getProjectId(),
+                entity.getName(),
                 entity.getDescription(),
                 entity.getOwner().getUserId());
         return projectDTO;
@@ -53,11 +59,17 @@ public class ProjectService implements BaseService<ProjectDTO> {
 
     public List<ProjectDTO> findAll(long ownerId) {
         List<Project> projects = projectRepo.findAllByOwnerId(ownerId);
-        ArrayList<ProjectDTO> projectDTOS = new ArrayList<>(projects.size());
+        List<ProjectDTO> projectDTOS = new ArrayList<>();
         for (int i = 0; i < projects.size(); i++) {
             Project project = projects.get(i);
-            projectDTOS.set(i, new ProjectDTO(project.getName(), project.getDescription()));
+            projectDTOS.add(new ProjectDTO(project.getProjectId(),
+                    project.getName(),
+                    project.getDescription(),
+                    project.getOwner().getUserId()));
         }
+        System.out.println("projects " + ownerId);
+        System.out.println(projects);
+        System.out.println(projectDTOS);
         return projectDTOS;
     }
 

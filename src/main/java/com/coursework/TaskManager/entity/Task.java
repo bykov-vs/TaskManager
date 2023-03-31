@@ -14,8 +14,18 @@ public class Task {
     private String name;
 
     private String description;
+    private String status;
 
     @ManyToOne
     @JoinColumn(name = "project_id")
     private Project project;
+
+    @Override
+    public String toString() {
+        return "Task{" +
+                "taskId=" + taskId +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }

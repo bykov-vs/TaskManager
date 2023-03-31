@@ -3,6 +3,7 @@ package com.coursework.TaskManager.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -14,8 +15,9 @@ public class User {
     private long userId;
 
     private String username;
+    private String password;
 
     @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
-    private Set<Project> projects;
+    private List<Project> projects;
 
 }

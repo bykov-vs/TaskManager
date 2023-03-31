@@ -9,6 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
+@CrossOrigin
 @RestController
 @RequestMapping("/task")
 public class TaskController {
@@ -21,6 +24,17 @@ public class TaskController {
             service.save(taskDTO);
             return new ResponseEntity<>(HttpStatus.CREATED);
         }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/save-all")
+    public ResponseEntity<?> saveAllTasks(@RequestBody List<TaskDTO> taskDTOS){
+        try {
+            service.saveAll(taskDTOS);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        }catch (Exception e){
+            e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }

@@ -1,5 +1,6 @@
 package com.coursework.TaskManager.service;
 
+import com.coursework.TaskManager.dto.ProjectDTO;
 import com.coursework.TaskManager.dto.TaskDTO;
 import com.coursework.TaskManager.entity.Project;
 import com.coursework.TaskManager.entity.Task;
@@ -20,11 +21,26 @@ public class TaskService implements BaseService<TaskDTO> {
         Task entity = new Task();
         entity.setName(taskDTO.getName());
         entity.setDescription(taskDTO.getDescription());
-
+        entity.setStatus(taskDTO.getStatus());
+        System.out.println(taskDTO);
         Project project = projectRepo.findById(taskDTO.getProjectId()).orElse(null);
         if (project != null){
             entity.setProject(project);
             taskRepo.save(entity);
+        }
+    }
+
+    public void saveAll(List<TaskDTO> taskDTOS){
+        long projectId = taskDTOS.get(0).getProjectId();
+        Project project = projectRepo.findById(projectId).orElse(null);
+
+        if (project != null){
+            for (Task task : project.getTasks()) {
+                delete(task.getTaskId());
+            }
+        }
+        for (TaskDTO taskDTO : taskDTOS) {
+            save(taskDTO);
         }
     }
 
@@ -46,11 +62,10 @@ public class TaskService implements BaseService<TaskDTO> {
 
     public List<TaskDTO> findAll(long projectId){
         List<Task> tasks = taskRepo.findAll(projectId);
-        List<TaskDTO> taskDTOS = new ArrayList<>(tasks.size());
-
+        List<TaskDTO> taskDTOS = new ArrayList<>();
         for (int i = 0; i < tasks.size(); i++) {
             Task task = tasks.get(i);
-            taskDTOS.set(i, new TaskDTO(task.getName(), task.getDescription(), projectId));
+            taskDTOS.add(new TaskDTO(task.getName(), task.getDescription(), task.getStatus(), projectId));
         }
         return taskDTOS;
     }
@@ -71,5 +86,8 @@ public class TaskService implements BaseService<TaskDTO> {
         }
         taskRepo.delete(task);
         return new TaskDTO(task.getName(), task.getDescription());
+    }
+    public void deleteAll(Project project){
+        taskRepo.deleteAllByProjectId(project.getProjectId());
     }
 }

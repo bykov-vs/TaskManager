@@ -1,5 +1,6 @@
 package com.coursework.TaskManager.repository;
 
+import com.coursework.TaskManager.entity.Project;
 import com.coursework.TaskManager.entity.Task;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -16,4 +17,8 @@ public interface TaskRepo extends JpaRepository<Task, Long> {
 
     @Query(nativeQuery = true, value = "SELECT * FROM tasks t WHERE t.project_id = ?1")
     List<Task> findAll(long projectId);
+
+    @Query(nativeQuery = true,
+            value = "DELETE FROM tasks t WHERE t.project_id=?1")
+    void deleteAllByProjectId(long id);
 }
