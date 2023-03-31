@@ -28,6 +28,7 @@
           <li class="w-full mt-2 bg-gray-200 border-t-gray-800 border-b-gray-800 border-double cursor-move"
               *ngFor="let task of todoTasks" cdkDrag>
              {{task.name}}
+            <button class="object-right text-right ml-1 border" (click)="showTask(task)">?</button>
           </li>
         </ul>
       </div>
@@ -43,6 +44,7 @@
           <li class="w-full mt-2 bg-gray-200 border-t-gray-800 border-b-gray-800 border-double cursor-move"
               *ngFor="let task of inProgressTasks" cdkDrag>
             {{task.name}}
+            <button class="object-right text-right ml-1 border" (click)="showTask(task)">?</button>
           </li>
         </ul>
       </div>
@@ -58,6 +60,7 @@
           <li class="w-full mt-2 bg-gray-200 border-t-gray-800 border-b-gray-800 border-double cursor-move"
               *ngFor="let task of doneTasks" cdkDrag>
             {{task.name}}
+            <button class="object-right text-right ml-1 border" (click)="showTask(task)">?</button>
           </li>
         </ul>
       </div>

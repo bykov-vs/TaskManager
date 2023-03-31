@@ -17,6 +17,7 @@ import { RegistrationComponent } from './components/registration/registration.co
 import { LoginComponent } from './components/login/login.component';
 import {HttpService} from "./services/HttpService";
 import {HttpClientModule} from "@angular/common/http";
+import { ShowTaskComponent } from './components/show-task/show-task.component';
 
 const appRoutes: Routes =[
   { path: '', component: HomeComponent},
@@ -34,7 +35,8 @@ const appRoutes: Routes =[
     AddTaskComponent,
     HomeComponent,
     RegistrationComponent,
-    LoginComponent
+    LoginComponent,
+    ShowTaskComponent
   ],
   imports: [
     BrowserModule,

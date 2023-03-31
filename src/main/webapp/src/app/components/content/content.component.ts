@@ -9,6 +9,7 @@ import {Router} from "@angular/router";
 import {AuthServiceService} from "../../services/auth-service.service";
 import {User} from "../../entities/User";
 import {HttpService} from "../../services/HttpService";
+import {ShowTaskComponent} from "../show-task/show-task.component";
 
 @Component({
   selector: 'app-content',
@@ -162,4 +163,11 @@ export class ContentComponent {
     this.router.navigate(['/login'])
   }
 
+  showTask(task: Task) {
+    const dialogRef = this.dialog.open(ShowTaskComponent, {
+      data: task,
+    });
+
+    dialogRef.afterClosed().subscribe( );
+  }
 }
