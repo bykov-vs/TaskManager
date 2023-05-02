@@ -17,6 +17,9 @@ public class User {
     private String username;
     private String password;
 
+    @OneToMany(mappedBy = "user")
+    private List<Participant> participants;
+
     @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
     private List<Project> projects;
 

@@ -24,6 +24,8 @@ export class ContentComponent {
   inProgressTasks : Array<Task> = [];
   doneTasks : Array<Task> = [];
 
+  participants : Array<User> = []
+
   user : User | undefined
 
   isAuthenticated : boolean = false
@@ -41,16 +43,11 @@ export class ContentComponent {
     })
   }
 
-
-
   chooseProject(project : Project){
-    console.log("click")
-    this.httpService.getTasks(project.id)
-      .subscribe((data : any) => {
-        this.currentProject = project
-        this.currentProject.tasks = data
-        this.parseTasks()
-      })
+    this.currentProject = project
+    console.log(this.currentProject)
+    this.parseTasks()
+    this.participants = this.currentProject.participants.slice()
   }
   parseTasks(){
     this.todoTasks = []
@@ -169,5 +166,27 @@ export class ContentComponent {
     });
 
     dialogRef.afterClosed().subscribe( );
+  }
+
+  accept(event: any){
+    let userId = event.target.id
+    if (this.currentProject === undefined){
+      return
+    }
+    let projectId = this.currentProject.id
+    this.httpService.acceptParticipant(projectId, userId).subscribe(
+      () => alert("Успешно!")
+    )
+  }
+
+  reject(event: any){
+    let userId = event.target.id
+    if (this.currentProject === undefined){
+      return
+    }
+    let projectId = this.currentProject.id
+    this.httpService.rejectParticipant(projectId, userId).subscribe(
+      () => alert("Успешно!")
+    )
   }
 }

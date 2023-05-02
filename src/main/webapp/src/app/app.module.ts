@@ -18,12 +18,14 @@ import { LoginComponent } from './components/login/login.component';
 import {HttpService} from "./services/HttpService";
 import {HttpClientModule} from "@angular/common/http";
 import { ShowTaskComponent } from './components/show-task/show-task.component';
+import { ProjectslistComponent } from './components/content/projectslist/projectslist.component';
 
 const appRoutes: Routes =[
   { path: '', component: HomeComponent},
   { path: 'projects', component: ContentComponent},
   {path: 'registration', component:RegistrationComponent},
-  {path: 'login', component:LoginComponent}
+  {path: 'login', component:LoginComponent},
+  {path: 'projects-list', component: ProjectslistComponent}
 ];
 @NgModule({
   declarations: [
@@ -36,7 +38,8 @@ const appRoutes: Routes =[
     HomeComponent,
     RegistrationComponent,
     LoginComponent,
-    ShowTaskComponent
+    ShowTaskComponent,
+    ProjectslistComponent
   ],
   imports: [
     BrowserModule,

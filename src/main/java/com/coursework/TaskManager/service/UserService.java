@@ -1,5 +1,6 @@
 package com.coursework.TaskManager.service;
 
+import com.coursework.TaskManager.converters.ProjectConverter;
 import com.coursework.TaskManager.dto.ProjectDTO;
 import com.coursework.TaskManager.dto.UserDTO;
 import com.coursework.TaskManager.entity.Project;
@@ -28,10 +29,7 @@ public class UserService implements BaseService<UserDTO> {
         List<ProjectDTO> projectDTOS = new ArrayList<>();
         if (user != null){
             for (Project project : user.getProjects()) {
-                projectDTOS.add(new ProjectDTO(project.getProjectId(),
-                        project.getName(),
-                        project.getDescription(),
-                        project.getOwner().getUserId()));
+                projectDTOS.add(ProjectConverter.convert(project));
             }
             UserDTO dto = new UserDTO(user.getUserId(), user.getUsername(), user.getPassword(), projectDTOS);
             dto.setProjects(projectService.findAll(user.getUserId()));

@@ -17,4 +17,12 @@ public interface ProjectRepo extends JpaRepository<Project, Long> {
     @Query(nativeQuery = true,
             value = "SELECT * FROM projects p WHERE p.user_id = ?1")
     List<Project> findAllByOwnerId(long id);
+
+    @Query(nativeQuery = true,
+            value = "SELECT * FROM projects WHERE project_id IN (SELECT project_id FROM participants p WHERE p.user_id = ?1)")
+    List<Project> findAllByParticipantsId(long id);
+
+    @Query(nativeQuery = true,
+            value = "INSERT INTO participants VALUES (?1, ?2)")
+    List<Project> saveParticipant(long project_id, long user_id);
 }

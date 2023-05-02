@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -25,6 +26,10 @@ public class Project {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User owner;
+
+
+    @OneToMany(mappedBy = "project")
+    private List<Participant> participants = new ArrayList<>();
 
     @Override
     public String toString() {

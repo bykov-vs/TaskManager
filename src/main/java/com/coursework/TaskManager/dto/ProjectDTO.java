@@ -17,7 +17,8 @@ public class ProjectDTO {
     private String name;
     private String description;
     private long userId;
-
+    private List<UserDTO> participants;
+    private List<UserDTO> requests;
     private List<Task> tasks = new ArrayList<>();
 
     public ProjectDTO(String name, String description) {

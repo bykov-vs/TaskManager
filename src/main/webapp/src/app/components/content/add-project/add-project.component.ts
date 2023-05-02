@@ -25,7 +25,9 @@ export class AddProjectComponent implements OnInit {
       name: this.name,
       description : this.description,
       tasks : [],
-      userId : -1
+      userId : -1,
+      participants : [],
+      requests : []
     }
     console.log(project)
     this.dialogRef.close(project);

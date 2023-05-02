@@ -1,0 +1,25 @@
+<div class="mt-5">
+  <ul>
+    <li class="border-2 cursor-pointer" *ngFor="let p of projects">
+      <div class="flex px-2 justify-between flex-row mb-2 py-2 justify-items-start">
+        <p [id]="p.id" (click)="getInfo($event)">{{p.name}}</p>
+        <button class="bg-gray-400 border-black border-2 border" [name]="p.id" (click)="sendRequest($event)">Присоединиться</button>
+      </div>
+      <div *ngIf="targetProject !== undefined && targetProject.id==p.id" [id]="'info'+p.id" hidden="true" class="grid grid-cols-2">
+        <div>
+          <p>Участники</p>
+          <br>
+          <ul>
+            <li *ngFor="let users of targetProject.participants">
+              {{users.username}}
+            </li>
+          </ul>
+        </div>
+        <div>
+          <p>Описание</p>
+          <p>{{targetProject.description}}</p>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>

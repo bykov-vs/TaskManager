@@ -1,4 +1,4 @@
-<div *ngIf="isAuthenticated" class="grid grid-cols-4 mt-4 gap-3.5 mx-10">
+<div *ngIf="isAuthenticated" class="grid grid-cols-5 mt-4 gap-3.5 mx-10">
 
   <div class="col-span-1 border-2 border-blue-400 border-l-gray-300 border-r-gray-300">
     <p class="text-2xl">Проекты:</p>
@@ -66,6 +66,21 @@
       </div>
     </div>
 
+  </div>
+  <div *ngIf="currentProject !== undefined" class="col-span-1">Участники
+    <p>Владелец</p>
+    <p class="border-b-2">{{participants[participants.length-1].username}}</p>
+    <p>Члены команды</p>
+    <p *ngFor="let p of participants.slice(0, participants.length-1)">{{p.username}}</p>
+    <div *ngIf="user !== undefined && user.id == currentProject.userId" >
+      <p>Заявки</p>
+      <div *ngFor="let r of currentProject.requests" class="flex flex-row justify-between">
+        <p >{{r.username}}</p>
+        <button [id]="r.id" (click)="accept($event)">A</button>
+        <button [id]="r.id" (click)="reject($event)">R</button>
+      </div>
+
+    </div>
   </div>
   <div *ngIf="currentProject !== undefined" class="col-span-1">Описание
     <p>{{currentProject.description}}</p>

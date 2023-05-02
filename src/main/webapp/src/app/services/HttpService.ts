@@ -3,11 +3,20 @@ import {HttpClient} from '@angular/common/http';
 import {User} from "../entities/User";
 import {Project} from "../entities/Project";
 import {Task} from "../entities/Task";
+import * as http from "http";
 
 @Injectable()
 export class HttpService {
 
   constructor(private http: HttpClient) {
+  }
+
+  getProjectById(id : number){
+    return this.http.get('http://localhost:8080/project/'+id);
+  }
+
+  getAllProjects(){
+    return this.http.get('http://localhost:8080/project/global-all');
   }
 
   register(user : User) {
@@ -32,5 +41,20 @@ export class HttpService {
 
   getTasks(id : number){
     return this.http.get('http://localhost:8080/task/all?id='+id)
+  }
+
+  saveRequest(projectId : number, userId : number){
+    let params = `projectId=${projectId}&userId=${userId}`
+    return this.http.get('http://localhost:8080/project/saveRequest?'+params)
+  }
+
+  acceptParticipant(projectId : number, userId : number){
+    let params = `projectId=${projectId}&userId=${userId}`
+    return this.http.get('http://localhost:8080/project/acceptParticipant?'+params)
+  }
+
+  rejectParticipant(projectId : number, userId : number){
+    let params = `projectId=${projectId}&userId=${userId}`
+    return this.http.get('http://localhost:8080/project/rejectParticipant?'+params)
   }
 }
