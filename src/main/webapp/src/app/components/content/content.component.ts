@@ -23,9 +23,9 @@ export class ContentComponent {
   todoTasks : Array<Task> = [];
   inProgressTasks : Array<Task> = [];
   doneTasks : Array<Task> = [];
-
   participants : Array<User> = []
-
+  inProgressUserTasks : Array<Task> = []
+  underReviewTasks: Array<Task> = []
   user : User | undefined
 
   isAuthenticated : boolean = false
@@ -45,22 +45,37 @@ export class ContentComponent {
 
   chooseProject(project : Project){
     this.currentProject = project
-    console.log(this.currentProject)
-    this.parseTasks()
-    this.participants = this.currentProject.participants.slice()
+    if (this.currentProject !== undefined){
+      this.httpService.getTasks(project.id)
+        .subscribe((data : any) => {
+          this.tasks = data
+          this.parseTasks()
+        })
+      this.participants = this.currentProject.participants.slice()
+    }
   }
   parseTasks(){
     this.todoTasks = []
     this.inProgressTasks = []
     this.doneTasks = []
+    this.inProgressUserTasks = []
+    this.underReviewTasks = []
     if (this.currentProject === undefined){
       return
     }
-    for (let task of this.currentProject.tasks){
+    for (let task of this.tasks){
       if (task.status === "todo"){
         this.todoTasks.push(task)
       }else if (task.status === "inProgress"){
-        this.inProgressTasks.push(task)
+        if (this.user !== undefined){
+          if (task.performerId == this.user.id){
+            this.inProgressUserTasks.push(task)
+          }else{
+            this.inProgressTasks.push(task)
+          }
+        }
+      }else if(task.status === "underReview"){
+        this.underReviewTasks.push(task)
       }else{
         this.doneTasks.push(task)
       }
@@ -137,7 +152,19 @@ export class ContentComponent {
         task.status = "done"
         tasks.push(task)
       }
-      console.log(tasks)
+      for (let task of this.underReviewTasks){
+        task.status = "underReview"
+        tasks.push(task)
+      }
+
+      for (let task of this.inProgressUserTasks){
+        task.status = "inProgress"
+        if (this.user !== undefined){
+          task.performerId = this.user.id
+        }
+        tasks.push(task)
+      }
+
       this.httpService.saveTasks(tasks)
         .subscribe(() => {
           if (this.currentProject !== undefined){
@@ -188,5 +215,12 @@ export class ContentComponent {
     this.httpService.rejectParticipant(projectId, userId).subscribe(
       () => alert("Успешно!")
     )
+  }
+
+  isOwner(){
+    if (this.user?.id === this.currentProject?.id){
+      return true
+    }
+    return false
   }
 }

@@ -12,6 +12,7 @@ public class TaskDTO {
     private String description;
     private String status;
     private long projectId;
+    private long performerId;
 
     public TaskDTO(String name, String description) {
         this.name = name;

@@ -19,7 +19,7 @@ public interface ProjectRepo extends JpaRepository<Project, Long> {
     List<Project> findAllByOwnerId(long id);
 
     @Query(nativeQuery = true,
-            value = "SELECT * FROM projects WHERE project_id IN (SELECT project_id FROM participants p WHERE p.user_id = ?1)")
+            value = "SELECT * FROM projects WHERE project_id IN (SELECT project_id FROM participants p WHERE p.user_id = ?1 AND p.status=true)")
     List<Project> findAllByParticipantsId(long id);
 
     @Query(nativeQuery = true,

@@ -2,6 +2,7 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {Project} from "../../../entities/Project";
 import {Task} from "../../../entities/Task";
+import {User} from "../../../entities/User";
 
 @Component({
   selector: 'app-add-task',
@@ -26,7 +27,8 @@ export class AddTaskComponent implements OnInit {
       name: this.name,
       description : this.description,
       status : "todo",
-      projectId : -1
+      projectId : -1,
+      performerId : -1
     }
     console.log(task)
     this.dialogRef.close(task);

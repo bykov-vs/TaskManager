@@ -1,6 +1,6 @@
-<div *ngIf="isAuthenticated" class="grid grid-cols-5 mt-4 gap-3.5 mx-10">
+<div *ngIf="isAuthenticated" class="flex items-start mt-4 justify-between mx-1">
 
-  <div class="col-span-1 border-2 border-blue-400 border-l-gray-300 border-r-gray-300">
+  <div class="col-span-1 border-2 border-blue-400 border-l-gray-300 border-r-gray-300 ">
     <p class="text-2xl">Проекты:</p>
     <ul>
       <li class="w-full bg-gray-300 hover:bg-blue-100 cursor-pointer" *ngFor="let project of projects">
@@ -11,16 +11,16 @@
             (click)="createProject()">Создать</button>
   </div>
 
-  <div *ngIf="currentProject !== undefined" class="col-span-2">
+  <div *ngIf="currentProject !== undefined" class="">
     <p class="text-2xl">Задачи</p>
-    <button class="mt-4 text-amber-50 bg-blue-900 hover:bg-emerald-500 hover:text-black w-full"
+    <button *ngIf="isOwner()" class="mt-4 text-amber-50 bg-blue-900 hover:bg-emerald-500 hover:text-black w-full"
             (click)="createTask()">Добавить задачу</button>
-    <div class="grid grid-cols-3 gap-2">
+    <div class="grid grid-cols-4 gap-2 text-center">
       <div
         cdkDropList
         [cdkDropListData]="todoTasks"
         #todoList="cdkDropList"
-        [cdkDropListConnectedTo]="[doneList, inProgressList]"
+        [cdkDropListConnectedTo]="[inProgressUserList]"
         (cdkDropListDropped)="drop($event)"
         class="col-span-1 border-l">
         <p class="text-xl">Сделать</p>
@@ -32,17 +32,49 @@
           </li>
         </ul>
       </div>
+      <div class="col-span-1 border-r border-l">
+        <div
+          cdkDropList
+          #inProgressList="cdkDropList"
+          [cdkDropListData]="inProgressTasks"
+          [cdkDropListConnectedTo]="[]"
+          (cdkDropListDropped)="drop($event)">
+          <p class="text-xl">В работе</p>
+          <ul class="">
+            <li class="w-full mt-2 bg-gray-200 border-t-gray-800 border-b-gray-800 border-double cursor-move"
+                *ngFor="let task of inProgressTasks" cdkDrag>
+              {{task.name}}
+              <button class="object-right text-right ml-1 border" (click)="showTask(task)">?</button>
+            </li>
+          </ul>
+        </div>
+        <div cdkDropList
+             #inProgressUserList="cdkDropList"
+             [cdkDropListData]="inProgressUserTasks"
+             [cdkDropListConnectedTo]="[underReviewList]"
+             (cdkDropListDropped)="drop($event)">
+          <p class="text-xl mt-6">Ваши задачи</p>
+          <ul class="">
+            <li class="w-full mt-2 bg-gray-200 border-t-gray-800 border-b-gray-800 border-double cursor-move"
+                *ngFor="let task of inProgressUserTasks" cdkDrag>
+              {{task.name}}
+              <button class="object-right text-right ml-1 border" (click)="showTask(task)">?</button>
+            </li>
+          </ul>
+        </div>
+      </div>
+
       <div
         cdkDropList
-        #inProgressList="cdkDropList"
-        [cdkDropListData]="inProgressTasks"
-        [cdkDropListConnectedTo]="[todoList, doneList]"
+        #underReviewList="cdkDropList"
+        [cdkDropListData]="underReviewTasks"
+        [cdkDropListConnectedTo]="[doneList, inProgressList]"
         (cdkDropListDropped)="drop($event)"
-        class="col-span-1 border-r border-l">
-        <p class="text-xl">В работе</p>
+        class="col-span-1 border-r">
+        <p class="text-xl">На проверке</p>
         <ul class="">
           <li class="w-full mt-2 bg-gray-200 border-t-gray-800 border-b-gray-800 border-double cursor-move"
-              *ngFor="let task of inProgressTasks" cdkDrag>
+              *ngFor="let task of underReviewTasks" cdkDrag>
             {{task.name}}
             <button class="object-right text-right ml-1 border" (click)="showTask(task)">?</button>
           </li>
@@ -67,7 +99,7 @@
     </div>
 
   </div>
-  <div *ngIf="currentProject !== undefined" class="col-span-1">Участники
+  <div *ngIf="currentProject !== undefined" class="">Участники
     <p>Владелец</p>
     <p class="border-b-2">{{participants[participants.length-1].username}}</p>
     <p>Члены команды</p>
@@ -82,7 +114,7 @@
 
     </div>
   </div>
-  <div *ngIf="currentProject !== undefined" class="col-span-1">Описание
+  <div *ngIf="currentProject !== undefined" class="">Описание
     <p>{{currentProject.description}}</p>
   </div>
 </div>

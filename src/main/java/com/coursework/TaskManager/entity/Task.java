@@ -17,6 +17,10 @@ public class Task {
     private String status;
 
     @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User performer;
+
+    @ManyToOne
     @JoinColumn(name = "project_id")
     private Project project;
 

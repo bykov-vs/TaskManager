@@ -1,11 +1,14 @@
 package com.coursework.TaskManager.service;
 
+import com.coursework.TaskManager.converters.TaskConverter;
 import com.coursework.TaskManager.dto.ProjectDTO;
 import com.coursework.TaskManager.dto.TaskDTO;
 import com.coursework.TaskManager.entity.Project;
 import com.coursework.TaskManager.entity.Task;
+import com.coursework.TaskManager.entity.User;
 import com.coursework.TaskManager.repository.ProjectRepo;
 import com.coursework.TaskManager.repository.TaskRepo;
+import com.coursework.TaskManager.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,13 +20,15 @@ public class TaskService implements BaseService<TaskDTO> {
     @Autowired private TaskRepo taskRepo;
     @Autowired private ProjectRepo projectRepo;
 
+    @Autowired private UserRepo userRepo;
+
     public void save(TaskDTO taskDTO) {
-        Task entity = new Task();
-        entity.setName(taskDTO.getName());
-        entity.setDescription(taskDTO.getDescription());
-        entity.setStatus(taskDTO.getStatus());
-        System.out.println(taskDTO);
+        Task entity = TaskConverter.convert(taskDTO);
         Project project = projectRepo.findById(taskDTO.getProjectId()).orElse(null);
+        User performer = userRepo.findById(taskDTO.getPerformerId()).orElse(null);
+        if (performer != null){
+            entity.setPerformer(performer);
+        }
         if (project != null){
             entity.setProject(project);
             taskRepo.save(entity);
@@ -49,7 +54,7 @@ public class TaskService implements BaseService<TaskDTO> {
         if (task == null){
             return null;
         }
-        return new TaskDTO(task.getName(), task.getDescription());
+        return TaskConverter.convert(task);
     }
 
     public TaskDTO find(long id) {
@@ -57,7 +62,7 @@ public class TaskService implements BaseService<TaskDTO> {
         if (task == null){
             return null;
         }
-        return new TaskDTO(task.getName(), task.getDescription());
+        return TaskConverter.convert(task);
     }
 
     public List<TaskDTO> findAll(long projectId){
@@ -65,7 +70,7 @@ public class TaskService implements BaseService<TaskDTO> {
         List<TaskDTO> taskDTOS = new ArrayList<>();
         for (int i = 0; i < tasks.size(); i++) {
             Task task = tasks.get(i);
-            taskDTOS.add(new TaskDTO(task.getName(), task.getDescription(), task.getStatus(), projectId));
+            taskDTOS.add(TaskConverter.convert(task));
         }
         return taskDTOS;
     }
@@ -76,7 +81,7 @@ public class TaskService implements BaseService<TaskDTO> {
             return null;
         }
         taskRepo.delete(task);
-        return new TaskDTO(task.getName(), task.getDescription());
+        return TaskConverter.convert(task);
     }
 
     public TaskDTO delete(TaskDTO taskDTO) {
@@ -85,7 +90,7 @@ public class TaskService implements BaseService<TaskDTO> {
             return null;
         }
         taskRepo.delete(task);
-        return new TaskDTO(task.getName(), task.getDescription());
+        return TaskConverter.convert(task);
     }
     public void deleteAll(Project project){
         taskRepo.deleteAllByProjectId(project.getProjectId());

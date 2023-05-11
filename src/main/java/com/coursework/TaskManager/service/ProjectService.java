@@ -95,7 +95,7 @@ public class ProjectService implements BaseService<ProjectDTO> {
             ProjectDTO dto = ProjectConverter.convert(project);
             dto.setParticipants(getParticipants(project));
             dto.setRequests(getRequests(project));
-            projectDTOS.add(ProjectConverter.convert(project));
+            projectDTOS.add(dto);
         }
         return projectDTOS;
     }
